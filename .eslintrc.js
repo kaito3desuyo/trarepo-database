@@ -25,7 +25,7 @@ module.exports = {
             "tabWidth": 4
         }],
         "arrow-body-style": "error",
-        "arrow-parens": "error",
+        "arrow-parens": "none",
         "arrow-spacing": "error",
         "generator-star-spacing": "error",
         "no-duplicate-imports": "error",
