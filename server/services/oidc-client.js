@@ -1,19 +1,17 @@
-module.exports = function (issuer) {
-    const client = new issuer.Client({
-        client_id: "hoge",
-        client_secret: "fuga"
-    })
+import Store from "data-store"
 
-    return client
-        .grant({
-            grant_type: "client_credentials"
+export default {
+    token: () => {
+        const store = new Store("oidcAccessToken", {
+            path: "./.config/token.json"
         })
-        .then(done => {
-            console.log(done)
-            resolve(done) 
+        const token = `${store.get("token_type")} ${store.get("access_token")}`
+        return token
+    },
+    client: () => {
+        const store = new Store("oidcClient", {
+            path: "./.config/client.json"
         })
-        .catch(err => {
-            console.error(err)
-            process.exit(1)
-        })
+        return store.clone()
+    }
 }

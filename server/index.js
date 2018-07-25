@@ -2,104 +2,106 @@
  * Module dependencies.
  */
 
-import appFactory from './app'
+import appFactory from "./app"
 
 /**
  * Open ID Connect OP.
  */
-const { Issuer } = require('openid-client')
-Issuer.discover('http://localhost:9000/op').then(issuer => {
+const { Issuer } = require("openid-client")
+Issuer.discover("http://localhost:9000/op")
+    .then(issuer => {
+        /*
+         * Default bin/www
+         */
 
-/*
- * Default bin/www
- */
+        /**
+         * Module dependencies.
+         */
 
-    /**
-     * Module dependencies.
-     */
+        const app = appFactory(issuer)
+        const debug = require("debug")("trarepo-database:server")
+        const http = require("http")
 
-    const app = appFactory(issuer)
-    const debug = require("debug")("trarepo-database:server")
-    const http = require("http")
+        /**
+         * Get port from environment and store in Express.
+         */
 
-    /**
-     * Get port from environment and store in Express.
-     */
+        const port = normalizePort(process.env.PORT || "3000")
+        app.set("port", port)
 
-    const port = normalizePort(process.env.PORT || "3000")
-    app.set("port", port)
+        /**
+         * Create HTTP server.
+         */
 
-    /**
-     * Create HTTP server.
-     */
+        const serverWorker = http.createServer(app)
 
-    const serverWorker = http.createServer(app)
+        /**
+         * Listen on provided port, on all network interfaces.
+         */
 
-    /**
-     * Listen on provided port, on all network interfaces.
-     */
+        serverWorker.listen(port)
+        serverWorker.on("error", onError)
+        serverWorker.on("listening", onListening)
 
-    serverWorker.listen(port)
-    serverWorker.on("error", onError)
-    serverWorker.on("listening", onListening)
+        /**
+         * Normalize a port into a number, string, or false.
+         */
 
-    /**
-     * Normalize a port into a number, string, or false.
-     */
+        function normalizePort(val) {
+            const port = parseInt(val, 10)
 
-    function normalizePort(val) {
-        var port = parseInt(val, 10)
+            if (isNaN(port)) {
+                // named pipe
+                return val
+            }
 
-          if (isNaN(port)) {
-            // named pipe
-            return val
+            if (port >= 0) {
+                // port number
+                return port
+            }
+
+            return false
         }
 
-        if (port >= 0) {
-            // port number
-            return port
+        /**
+         * Event listener for HTTP server "error" event.
+         */
+
+        function onError(error) {
+            if (error.syscall !== "listen") {
+                throw error
+            }
+
+            const bind =
+                typeof port === "string" ? `Pipe ${port}` : `Port ${port}`
+
+            // handle specific listen errors with friendly messages
+            switch (error.code) {
+                case "EACCES":
+                    console.error(`${bind} requires elevated privileges`)
+                    process.exit(1)
+                    break
+                case "EADDRINUSE":
+                    console.error(`${bind} is already in use`)
+                    process.exit(1)
+                    break
+                default:
+                    throw error
+            }
         }
 
-        return false
-    }
+        /**
+         * Event listener for HTTP server "listening" event.
+         */
 
-    /**
-    * Event listener for HTTP server "error" event.
-    */
-
-    function onError(error) {
-        if (error.syscall !== "listen") {
-            throw error
+        function onListening() {
+            const addr = serverWorker.address()
+            const bind =
+                typeof addr === "string" ? `pipe ${addr}` : `port ${addr.port}`
+            debug(`Listening on ${bind}`)
         }
-
-        var bind = typeof port === "string" ? "Pipe " + port : "Port " + port
-
-        // handle specific listen errors with friendly messages
-        switch (error.code) {
-        case "EACCES":
-                console.error(bind + " requires elevated privileges")
-                process.exit(1)
-            break
-            case "EADDRINUSE":
-                console.error(bind + " is already in use")
-            process.exit(1)
-            break
-            default:
-            throw error
-        }
-    }
-
-    /**
-    * Event listener for HTTP server "listening" event.
-    */
-
-    function onListening() {
-        var addr = serverWorker.address()
-        var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port
-        debug('Listening on ' + bind)
-    }
-
-}).catch(err => {
-    console.error(err)
-    process.exit(1)
-})
+    })
+    .catch(err => {
+        console.error(err)
+        process.exit(1)
+    })
