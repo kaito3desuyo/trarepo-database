@@ -4,6 +4,7 @@ import session from "express-session"
 import api from "./api"
 import config from "../client/nuxt.config.js"
 import oidc from "./services/oidc-client.js"
+import passport from "./services/passport.js"
 
 export default issuer => {
     /*
@@ -28,6 +29,9 @@ export default issuer => {
             saveUninitialized: false
         })
     )
+
+    app.use(passport.initialize())
+    app.use(passport.session())
 
     app.use((req, res, next) => {
         client

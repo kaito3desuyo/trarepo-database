@@ -1,11 +1,27 @@
 <template>
-    <div class="container">
+<div class="container">
         <div class="columns">
             <div class="column">
                 <div class="content">
                     <h2>{{title}}</h2>
-                    <p>TraRepo Databaseは、TraRepo ProjectのシンプルなWebフロントエンドです。</p>
-                    <h3>TraRepo Projectとは？</h3>
+                    <p>
+                        TraRepo Projectにご興味をお持ち頂き、ありがとうざいます。<br>
+                        ユーザー登録を行います。
+                    </p>
+                    <h3>各種アカウントで登録</h3>
+
+                    <button class="button">
+                        <span class="icon">
+                            <i class="mdi mdi-twitter"></i>
+                        </span>
+                        　Twitterアカウントで登録
+                    </button>
+                    <a href="/api/auth/google" class="button">
+                        <span class="icon">
+                            <i class="mdi mdi-google"></i>
+                        </span>
+                        　Googleアカウントで登録
+                    </a>
                     <p>
                         TraRepo Projectは、日本全国の公共交通機関のあらゆる情報をオープンデータとしてRESTfulなWeb APIとして提供し、
                         様々なアプリケーションでご利用いただくことで、交通とITの融合を目指すプロジェクトです。<br>
@@ -46,7 +62,7 @@
 export default {
     data () {
         return {
-            title: "TOP"
+            title: "サインアップ"
         }
     },
     head () {
