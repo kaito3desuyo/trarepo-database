@@ -1,14 +1,9 @@
 module.exports = {
     srcDir: "client",
     head: {
-        titleTemplate: "%s - TraRepo DataBase",
-        link: [
-            {
-                rel: "stylesheet",
-                href:
-                    "//cdn.materialdesignicons.com/2.0.46/css/materialdesignicons.min.css"
-            }
-        ]
+        titleTemplate: "%s - TraRepo DataBase"
     },
-    modules: ["nuxt-buefy"]
+    modules: ["nuxt-buefy", "@nuxtjs/axios"],
+    plugins: ["~/plugins/vee-validate"],
+    build: ["vee-validate", "axios"]
 }

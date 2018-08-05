@@ -10,17 +10,23 @@
     "lintfix": "eslint --fix --ext .js,.vue --ignore-path .gitignore ."
   },
   "dependencies": {
+    "@mdi/font": "^2.5.94",
+    "@nuxtjs/axios": "^5.3.1",
     "axios": "^0.18.0",
+    "body-parser": "^1.18.3",
     "data-store": "^3.0.3",
     "dotenv": "^6.0.0",
     "express": "~4.16.0",
     "express-session": "^1.15.6",
+    "nanoid": "^1.1.0",
+    "nodemailer": "^4.6.7",
     "nuxt": "^1.4.1",
     "nuxt-buefy": "^0.1.0",
     "openid-client": "^2.2.1",
     "passport": "^0.4.0",
     "passport-google-oauth": "^1.0.0",
-    "passport-twitter": "^1.0.4"
+    "passport-twitter": "^1.0.4",
+    "vee-validate": "^2.1.0-beta.7"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.6",
@@ -34,6 +40,7 @@
     "eslint-plugin-prettier": "^2.6.2",
     "eslint-plugin-vue": "^4.7.0",
     "prettier": "^1.13.7",
+    "vue-eslint-parser": "^3.2.2",
     "webpack-node-externals": "^1.7.2"
   }
 }

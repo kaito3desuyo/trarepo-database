@@ -5,6 +5,7 @@
         "node": true,
         "es6": true
     },
+    "parser": "vue-eslint-parser",
     "parserOptions": {
         "parser": "babel-eslint",
         "sourceType": "module"
@@ -16,19 +17,18 @@
         "plugin:import/errors",
         "plugin:import/warnings"
     ],
-    "plugins": [
-        "prettier",
-        "vue",
-        "import"
-    ],
+    "plugins": ["prettier", "vue", "import"],
     "rules": {
         "semi": [2, "never"],
-        "indent": ["error", 4, {"SwitchCase": 1}],
+        "indent": ["error", 4, { "SwitchCase": 1 }],
         "no-console": "off",
-        "prettier/prettier": ["error", { 
-            "semi": false,
-            "tabWidth": 4
-        }],
+        "prettier/prettier": [
+            "error",
+            {
+                "semi": false,
+                "tabWidth": 4
+            }
+        ],
         "arrow-body-style": "error",
         "arrow-parens": "off",
         "arrow-spacing": "error",
@@ -47,6 +47,7 @@
         "rest-spread-spacing": "error",
         "template-curly-spacing": "error",
         "yield-star-spacing": "error",
-        "vue/max-attributes-per-line": "off"
+        "vue/max-attributes-per-line": "off",
+        "vue/html-indent": ["error", "tab"]
     }
 }

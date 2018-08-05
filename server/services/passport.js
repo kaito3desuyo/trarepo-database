@@ -30,11 +30,17 @@ passport.use(
                     userId: profile.id
                 })
                 .then(result => {
-                    const response = { id: result.data.contents.id }
+                    const response = { id: result.data.contents[0].id }
                     done(null, response)
                 })
                 .catch(error => {
-                    done(error)
+                    done({
+                        code: error.response.data.statusCode,
+                        subject: {
+                            stack: error.stack,
+                            message: error.response.data.message
+                        }
+                    })
                 })
         }
     )
@@ -55,7 +61,13 @@ passport.deserializeUser((user, done) => {
             done(null, result.data.contents)
         })
         .catch(error => {
-            done(error)
+            done({
+                code: error.response.data.statusCode,
+                subject: {
+                    stack: error.stack,
+                    message: error.response.data.message
+                }
+            })
         })
 })
 
