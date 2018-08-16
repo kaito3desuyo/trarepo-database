@@ -1,26 +1,26 @@
 <template>
 	<div class="content">
 		<h2>{{ title }}</h2>
-		<p>
-			TraRepo Projectにご興味をお持ち頂き、ありがとうざいます。<br>
-			ユーザー登録を行います。
-		</p>
-		<h3>各種アカウントで登録</h3>
+		<h3>各種アカウントでログイン</h3>
 
 		<button class="button">
 			<b-icon icon="twitter"/>
-			&nbsp;&nbsp;Twitterアカウントで登録
+			&nbsp;&nbsp;Twitterアカウントでログイン
 		</button>
 		<a href="/api/auth/google" class="button">
 			<b-icon icon="google"/>
-			&nbsp;&nbsp;Googleアカウントで登録
+			&nbsp;&nbsp;Googleアカウントでログイン
 		</a>
-		<h3>メールアドレスで登録</h3>
-		<p>メールアドレスを入力してください。<br>
-			入力されたメールアドレスに確認用メールを送信します。</p>
-		<form data-vv-scope="form1" @submit.prevent="sendEmail()">
+		<h3>メールアドレスでログイン</h3>
+		<form data-vv-scope="form1" @submit.prevent="logIn()">
+			<b-notification v-if="errors.any()" :closable="false" type="is-warning" has-icon>
+				<span v-for="msg in errors.all()" :key="msg.id">{{ msg }}<br></span>
+			</b-notification>
 			<b-field label="メールアドレス">
 				<b-input v-validate="'required|email'" v-model="localAuth.email" data-vv-as="メールアドレス" name="email" type="email" placeholder="abc@example.ne.jp"/>
+			</b-field>
+			<b-field label="パスワード">
+				<b-input v-validate="'required'" v-model="localAuth.password" data-vv-as="パスワード" name="password" type="password" placeholder=""/>
 			</b-field>
 			<button class="button is-primary">送信</button>
 		</form>
@@ -33,9 +33,10 @@ export default {
     mixins: [error, validate],
     data() {
         return {
-            title: "サインアップ",
+            title: "ログイン",
             localAuth: {
-                email: null
+                email: null,
+                password: null
             }
         }
     },
@@ -45,14 +46,11 @@ export default {
         }
     },
     methods: {
-        async sendEmail() {
+        async logIn() {
             try {
                 await this.validateHandler("form1")
                 await this.accessAPI()
-                this.$dialog.alert(
-                    "入力されたメールアドレスに確認コードを送信しました。<br>次の画面で受信したコードを入力し、本人確認を行ってください。"
-                )
-                this.$router.push("/users/signup/detail")
+                window.location.href = "/"
             } catch (error) {
                 this.errorHandler(error)
             }
@@ -60,8 +58,9 @@ export default {
         async accessAPI() {
             return new Promise((resolve, reject) => {
                 this.$axios
-                    .post("/api/auth/local/emailcheck", {
-                        email: this.localAuth.email
+                    .post("/api/auth/login", {
+                        email: this.localAuth.email,
+                        password: this.localAuth.password
                     })
                     .then(done => {
                         resolve(done)

@@ -1,8 +1,64 @@
 import passport from "passport"
+import { Strategy as LocalStrategy } from "passport-local"
 import TwitterStrategy from "passport-twitter"
 import { OAuth2Strategy as GoogleStrategy } from "passport-google-oauth"
 require("dotenv").config()
 import axios from "axios"
+import bcrypt from "bcrypt"
+
+passport.use(
+    new LocalStrategy(
+        { usernameField: "email", passwordField: "password" },
+        (username, password, done) =>
+            axios
+                .get(`http://localhost:9000/api/v1/users/`, {
+                    params: {
+                        searchColumn: "email",
+                        searchValue: username
+                    }
+                })
+                .then(result => {
+                    if (result.data.contents.length === 0) {
+                        done({
+                            code: 401,
+                            subject: {
+                                stack: null,
+                                message: "User doesn't exist"
+                            }
+                        })
+                    }
+                    bcrypt.compare(
+                        password,
+                        result.data.contents[0].password,
+                        (err, res) => {
+                            if (!res) {
+                                done({
+                                    code: 401,
+                                    subject: {
+                                        stack: null,
+                                        message: "Not match password"
+                                    }
+                                })
+                            } else {
+                                const response = {
+                                    id: result.data.contents[0].id
+                                }
+                                done(null, response)
+                            }
+                        }
+                    )
+                })
+                .catch(error => {
+                    done({
+                        code: error.response.data.statusCode,
+                        subject: {
+                            stack: error.stack,
+                            message: error.response.data.message
+                        }
+                    })
+                })
+    )
+)
 
 passport.use(
     new TwitterStrategy(

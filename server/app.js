@@ -74,8 +74,6 @@ export default issuer => {
 
     app.use("/api", api)
 
-    app.use(nuxt.render)
-
     app.use((err, req, res, next) => {
         console.error(err.subject.stack)
 
@@ -86,6 +84,8 @@ export default issuer => {
             contents: null
         })
     })
+
+    app.use(nuxt.render)
 
     return app
 }

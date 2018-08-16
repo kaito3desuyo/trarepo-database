@@ -39,10 +39,14 @@ router.get("/cookie", (req, res) => {
 router.get("/session", (req, res) => {
     res.json(req.session)
 })
-router.get("/logoff", (req, res) => {
-    req.logout()
-    res.redirect("/")
-})
+
+//local login
+router.post(
+    "/login",
+    passport.authenticate("local", {
+        successRedirect: "/"
+    })
+)
 
 //local signup
 
@@ -151,6 +155,11 @@ router.post("/local/createuser", (req, res, next) => {
                 subject: err.response.data
             })
         })
+})
+
+router.get("/logoff", (req, res) => {
+    req.logout()
+    res.redirect("/")
 })
 
 export default router

@@ -11,7 +11,8 @@
 					<li><nuxt-link to="/users/login">ログイン</nuxt-link></li>
 				</template>
 				<template v-else>
-					<li><nuxt-link to="/api/auth/logoff">ログアウト</nuxt-link></li>
+					<li><nuxt-link to="/users/mypage">マイページ</nuxt-link></li>
+					<li><a href="/api/auth/logoff">ログアウト</a></li>
 				</template>
 			</ul>
 		</aside>
