@@ -1,9 +1,11 @@
 import express from "express"
 import { Nuxt, Builder } from "nuxt"
 import session from "express-session"
+import bodyParser from "body-parser"
 import api from "./api"
 import config from "../client/nuxt.config.js"
 import oidc from "./services/oidc-client.js"
+import passport from "./services/passport.js"
 
 export default issuer => {
     /*
@@ -28,6 +30,11 @@ export default issuer => {
             saveUninitialized: false
         })
     )
+    app.use(bodyParser.urlencoded({ extended: true }))
+    app.use(bodyParser.json())
+
+    app.use(passport.initialize())
+    app.use(passport.session())
 
     app.use((req, res, next) => {
         client
@@ -65,12 +72,19 @@ export default issuer => {
             })
     })
 
+    app.use("/api", api)
+
     app.use((err, req, res, next) => {
-        console.log(err)
-        res.status(err.statusCode).json(err)
+        console.error(err.subject.stack)
+
+        res.status(err.code).json({
+            statusCode: err.code,
+            path: req.originalUrl,
+            message: err.subject.message,
+            contents: null
+        })
     })
 
-    app.use("/api", api)
     app.use(nuxt.render)
 
     return app
