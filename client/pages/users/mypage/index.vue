@@ -235,40 +235,48 @@ export default {
             try {
                 await this.validateHandler("form2")
                 await this.accessCreateClientAPI()
+                window.location.href = "/users/mypage"
             } catch (error) {
                 this.errorHandler(error)
             }
         },
         async accessEmailAPI() {
             return new Promise((resolve, reject) => {
+                const loadingComponent = this.$loading.open()
                 this.$axios
                     .post("/api/auth/local/emailcheck", {
                         email: this.account.email
                     })
                     .then(done => {
+                        loadingComponent.close()
                         resolve(done)
                     })
                     .catch(err => {
+                        loadingComponent.close()
                         reject([err.response.data.message])
                     })
             })
         },
         async accessIdentifyCodeAPI() {
             return new Promise((resolve, reject) => {
+                const loadingComponent = this.$loading.open()
                 this.$axios
                     .post("/api/auth/local/codecheck", {
                         identifyCode: this.account.identifyCode
                     })
                     .then(result => {
+                        loadingComponent.close()
                         resolve()
                     })
                     .catch(err => {
+                        loadingComponent.close()
                         reject([err.response.data.message])
                     })
             })
         },
         async accessUpdateUserAPI() {
             return new Promise((resolve, reject) => {
+                const loadingComponent = this.$loading.open()
                 this.$axios
                     .put("/api/users", {
                         id: this.account.id,
@@ -277,15 +285,18 @@ export default {
                         password: this.account.password
                     })
                     .then(result => {
+                        loadingComponent.close()
                         resolve()
                     })
                     .catch(err => {
+                        loadingComponent.close()
                         reject([err.response.data.message])
                     })
             })
         },
         async accessCreateClientAPI() {
             return new Promise((resolve, reject) => {
+                const loadingComponent = this.$loading.open()
                 this.$axios
                     .post("/api/users/clients", {
                         user_id: this.$store.state.auth.loginedUser.id,
@@ -293,9 +304,11 @@ export default {
                         redirect_uris: this.clients.create.redirect_uris
                     })
                     .then(result => {
+                        loadingComponent.close()
                         resolve()
                     })
                     .catch(err => {
+                        loadingComponent.close()
                         reject([err.response.data.message])
                     })
             })
@@ -305,14 +318,17 @@ export default {
                 this.errorHandler(["削除対象のカラムが選択されていません"])
                 return
             }
+            const loadingComponent = this.$loading.open()
             this.$axios
                 .delete("/api/users/clients", {
                     params: { id: this.clients.table.selected.client_id }
                 })
                 .then(result => {
+                    loadingComponent.close()
                     window.location.href = "/users/mypage"
                 })
                 .catch(err => {
+                    loadingComponent.close()
                     this.errorHandler([err.response.data.message])
                 })
         }

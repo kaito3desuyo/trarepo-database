@@ -3,7 +3,7 @@ import { Strategy as LocalStrategy } from "passport-local"
 import TwitterStrategy from "passport-twitter"
 import { OAuth2Strategy as GoogleStrategy } from "passport-google-oauth"
 require("dotenv").config()
-import axios from "axios"
+import axios from "../services/axios"
 import bcrypt from "bcrypt"
 
 passport.use(
@@ -11,7 +11,7 @@ passport.use(
         { usernameField: "email", passwordField: "password" },
         (username, password, done) =>
             axios
-                .get(`http://localhost:9000/api/v1/users/`, {
+                .get(`/users`, {
                     params: {
                         searchColumn: "email",
                         searchValue: username
@@ -80,7 +80,7 @@ passport.use(
         },
         (token, tokenSecret, profile, done) => {
             axios
-                .post("http://localhost:9000/api/v1/users", {
+                .post("/users", {
                     name: profile.displayName,
                     provider: profile.provider,
                     userId: profile.id
@@ -108,7 +108,7 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser((user, done) => {
     axios
-        .get(`http://localhost:9000/api/v1/users/${user.id}`, {
+        .get(`/users/${user.id}`, {
             params: {
                 id: user.id
             }

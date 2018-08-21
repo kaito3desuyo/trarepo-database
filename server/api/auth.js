@@ -1,6 +1,6 @@
 import { Router } from "express"
 import passport from "passport"
-import axios from "axios"
+import axios from "../services/axios"
 import nanoid from "../services/nanoid"
 import nodemailer from "../services/nodemailer"
 
@@ -55,7 +55,7 @@ router.post("/local/emailcheck", (req, res, next) => {
     const isExistEmail = address =>
         new Promise((resolve, reject) => {
             axios
-                .get(`http://localhost:9000/api/v1/users/`, {
+                .get(`/users`, {
                     params: {
                         searchColumn: "email",
                         searchValue: address
@@ -80,7 +80,7 @@ router.post("/local/emailcheck", (req, res, next) => {
     const sendEmail = code =>
         new Promise((resolve, reject) => {
             nodemailer.send(
-                "a",
+                "TraRepo DataBase <trarepo@seapolis.me>",
                 req.body.email,
                 "[TraRepo]メールアドレス確認コード",
                 code,
@@ -130,7 +130,7 @@ router.post("/local/codecheck", (req, res, next) => {
 
 router.post("/local/createuser", (req, res, next) => {
     axios
-        .post("http://localhost:9000/api/v1/users/", {
+        .post("/users", {
             name: req.body.name,
             email: req.body.email,
             password: req.body.password,

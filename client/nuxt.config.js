@@ -4,6 +4,6 @@ module.exports = {
         titleTemplate: "%s - TraRepo DataBase"
     },
     modules: ["nuxt-buefy", "@nuxtjs/axios"],
-    plugins: ["~/plugins/vee-validate"],
-    build: ["vee-validate", "axios"]
+    plugins: ["~/plugins/vee-validate", "~/plugins/axios"],
+    build: ["vee-validate", "axios", "libphonenumber-js"]
 }

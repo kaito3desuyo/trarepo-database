@@ -15,6 +15,12 @@
 					<li><a href="/api/auth/logoff">ログアウト</a></li>
 				</template>
 			</ul>
+			<p class="menu-label">
+				データベース
+			</p>
+			<ul class="menu-list">
+				<li><nuxt-link to="/database/agencies">agencies（法人データ）</nuxt-link></li>
+			</ul>
 		</aside>
 	</div>
 </template>

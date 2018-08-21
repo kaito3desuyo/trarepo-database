@@ -1,5 +1,5 @@
 import { Router } from "express"
-import axios from "axios"
+import axios from "../services/axios"
 import { v4 as uuid } from "uuid"
 const router = Router()
 
@@ -10,7 +10,7 @@ router.get("/", (req, res) => {
 
 router.put("/", (req, res, next) => {
     axios
-        .put("http://localhost:9000/api/v1/users/", {
+        .put("/users", {
             id: req.body.id,
             name: req.body.name,
             email: req.body.email,
@@ -29,7 +29,7 @@ router.put("/", (req, res, next) => {
 
 router.get("/clients", (req, res, next) => {
     axios
-        .get("http://localhost:9000/api/v1/clients", {
+        .get("/clients", {
             params: {
                 searchColumn: `data.user_id`,
                 searchValue: req.query.user_id
@@ -58,7 +58,7 @@ router.post("/clients", (req, res, next) => {
         response_types: []
     }
     axios
-        .post("http://localhost:9000/api/v1/clients/", {
+        .post("/clients", {
             id: cli_id,
             data: client_data
         })
@@ -75,7 +75,7 @@ router.post("/clients", (req, res, next) => {
 
 router.delete("/clients", (req, res, next) => {
     axios
-        .delete("http://localhost:9000/api/v1/clients/", {
+        .delete("/clients", {
             params: { id: req.query.id }
         })
         .then(result => {

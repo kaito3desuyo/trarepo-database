@@ -1,11 +1,22 @@
+// Core Modules
 import express from "express"
 import { Nuxt, Builder } from "nuxt"
+
+// Parser
 import session from "express-session"
 import bodyParser from "body-parser"
+
+// Original Routing and Setting
 import api from "./api"
 import config from "../client/nuxt.config.js"
+
+// Authoriation
 import oidc from "./services/oidc-client.js"
 import passport from "./services/passport.js"
+
+// Security
+import helmet from "helmet"
+import csurf from "csurf"
 
 export default issuer => {
     /*
@@ -54,6 +65,9 @@ export default issuer => {
             })
     })
 
+    app.use(helmet())
+    app.use(csurf())
+
     app.get("/auth", (req, res, next) => {
         const axios = require("axios")
         const token = oidc.token()
@@ -68,11 +82,22 @@ export default issuer => {
                 res.send(response.data)
             })
             .catch(err => {
-                next(err.response.data)
+                res.json(err.response.data)
             })
     })
 
     app.use("/api", api)
+
+    app.use((err, req, res, next) => {
+        if (err.code !== "EBADCSRFTOKEN") return next(err)
+
+        res.status(403).json({
+            statusCode: 403,
+            path: req.originalUrl,
+            message: "Detect attacks",
+            contents: null
+        })
+    })
 
     app.use((err, req, res, next) => {
         console.error(err.subject.stack)

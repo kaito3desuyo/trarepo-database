@@ -57,15 +57,18 @@ export default {
         },
         async accessAPI() {
             return new Promise((resolve, reject) => {
+                const loadingComponent = this.$loading.open()
                 this.$axios
                     .post("/api/auth/login", {
                         email: this.localAuth.email,
                         password: this.localAuth.password
                     })
                     .then(done => {
+                        loadingComponent.close()
                         resolve(done)
                     })
                     .catch(err => {
+                        loadingComponent.close()
                         reject([err.response.data.message])
                     })
             })

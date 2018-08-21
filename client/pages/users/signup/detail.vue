@@ -67,11 +67,13 @@ export default {
         },
         async accessIdentifyCodeAPI() {
             return new Promise((resolve, reject) => {
+                const loadingComponent = this.$loading.open()
                 this.$axios
                     .post("/api/auth/local/codecheck", {
                         identifyCode: this.localAuth.identifyCode
                     })
                     .then(result => {
+                        loadingComponent.close()
                         this.$dialog.alert(
                             "本人確認に成功しました。<br>続いてユーザー情報を入力してください。"
                         )
@@ -80,6 +82,7 @@ export default {
                         resolve()
                     })
                     .catch(err => {
+                        loadingComponent.close()
                         reject([err.response.data.message])
                     })
             })
@@ -95,6 +98,7 @@ export default {
         },
         async accessCreateUserAPI() {
             return new Promise((resolve, reject) => {
+                const loadingComponent = this.$loading.open()
                 this.$axios
                     .post("/api/auth/local/createuser", {
                         name: this.localAuth.form.name,
@@ -102,12 +106,14 @@ export default {
                         password: this.localAuth.form.password
                     })
                     .then(result => {
+                        loadingComponent.close()
                         this.$dialog.alert(
                             "登録が完了しました。<br>ログイン画面でログインしてください。"
                         )
                         resolve()
                     })
                     .catch(err => {
+                        loadingComponent.close()
                         reject([err.response.data.message])
                     })
             })
