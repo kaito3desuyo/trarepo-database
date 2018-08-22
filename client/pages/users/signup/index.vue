@@ -7,10 +7,10 @@
 		</p>
 		<h3>各種アカウントで登録</h3>
 
-		<button class="button">
+		<a href="/api/auth/twitter" class="button">
 			<b-icon icon="twitter"/>
-			&nbsp;&nbsp;Twitterアカウントで登録
-		</button>
+			&nbsp;&nbsp;Twitterアカウントでログイン
+		</a>
 		<a href="/api/auth/google" class="button">
 			<b-icon icon="google"/>
 			&nbsp;&nbsp;Googleアカウントで登録

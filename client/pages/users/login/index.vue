@@ -3,10 +3,10 @@
 		<h2>{{ title }}</h2>
 		<h3>各種アカウントでログイン</h3>
 
-		<button class="button">
+		<a href="/api/auth/twitter" class="button">
 			<b-icon icon="twitter"/>
 			&nbsp;&nbsp;Twitterアカウントでログイン
-		</button>
+		</a>
 		<a href="/api/auth/google" class="button">
 			<b-icon icon="google"/>
 			&nbsp;&nbsp;Googleアカウントでログイン

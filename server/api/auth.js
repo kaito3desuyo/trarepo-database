@@ -14,6 +14,16 @@ router.get("/", (req, res) => {
 // Twitter Auth
 router.get("/twitter", passport.authenticate("twitter"))
 
+router.get(
+    "/twitter/callback",
+    passport.authenticate("twitter", {
+        failureRedirect: "/users/authfailure"
+    }),
+    (req, res) => {
+        res.redirect("/")
+    }
+)
+
 // Google Auth
 router.get(
     "/google",

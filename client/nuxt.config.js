@@ -5,5 +5,8 @@ module.exports = {
     },
     modules: ["nuxt-buefy", "@nuxtjs/axios"],
     plugins: ["~/plugins/vee-validate"],
-    build: ["vee-validate", "axios"]
+    build: ["vee-validate", "axios"],
+    axios: {
+        baseURL: "http://127.0.0.1:3000"
+    }
 }
