@@ -19,10 +19,11 @@
 						
 					<button class="button is-info">編集</button>
 						
-					<button class="button is-danger">削除</button>
+					<button class="button is-danger" @click="deleteAgency">削除</button>
 				</div>
 			</template>
 		</b-table>
+		{{ selected }}
 		<div class="content">
 			<h3>新規追加</h3>
 		</div>
@@ -71,7 +72,7 @@
 				</b-field>		
 
 				<b-field :type="errors.has('parentAgencyNumber', 'createForm') ? 'is-danger' : ''" :message="errors.first('parentAgencyNumber', 'createForm')" label="親法人番号">
-					<b-input v-validate="'required'" v-model="create.data.parentAgencyNumber" data-vv-as="親法人番号" name="parentAgencyNumber" type="text"/>
+					<b-input v-model="create.data.parentAgencyNumber" data-vv-as="親法人番号" name="parentAgencyNumber" type="text"/>
 				</b-field>
 
 				<b-field :type="errors.has('agencyOfficialName', 'createForm') ? 'is-danger' : ''" :message="errors.first('agencyOfficialName', 'createForm')" label="法人の正式名称">
@@ -114,11 +115,11 @@
 </template>
 
 <script>
-import { error, validate } from "../../../mixins/handler"
+import { error, validate, confirm } from "../../../mixins/handler"
 import debounce from "lodash/debounce"
 
 export default {
-    mixins: [error, validate],
+    mixins: [error, validate, confirm],
     data() {
         return {
             title: "法人データベース / agencies",
@@ -172,7 +173,7 @@ export default {
                 }
             ],
             selected: null,
-            total: 20,
+            total: 100,
             page: 1,
             perPage: 10,
             loading: false
@@ -197,9 +198,54 @@ export default {
         async createAgency() {
             try {
                 await this.validateHandler("createForm")
+                await this.accessCreateAgencyAPI()
+                window.location.href = "./agencies"
             } catch (error) {
                 this.errorHandler(error)
             }
+        },
+        async deleteAgency() {
+            try {
+                await this.confirmHandler("選択した項目を削除しますか？")
+                await this.accessDeleteAgencyAPI()
+                window.location.href = "./agencies"
+                this.$toast.open("削除しました")
+            } catch (error) {
+                this.errorHandler(error)
+            }
+        },
+        async accessCreateAgencyAPI() {
+            return new Promise((resolve, reject) => {
+                this.$axios
+                    .post("/api/agencies", {
+                        data: this.create.data
+                    })
+                    .then(result => {
+                        resolve()
+                    })
+                    .catch(err => {
+                        reject([err.response.data.message])
+                    })
+            })
+        },
+        async accessDeleteAgencyAPI() {
+            return new Promise((resolve, reject) => {
+                if (!this.selected) {
+                    reject(["削除する項目を選択してください"])
+                }
+                this.$axios
+                    .delete("/api/agencies", {
+                        params: {
+                            id: this.selected.id
+                        }
+                    })
+                    .then(result => {
+                        resolve()
+                    })
+                    .catch(err => {
+                        reject([err.response.data.message])
+                    })
+            })
         },
         getAsyncData: debounce(function() {
             if (!this.create.search.name) {

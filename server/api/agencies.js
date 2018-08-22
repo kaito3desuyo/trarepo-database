@@ -22,8 +22,46 @@ router.get("/", (req, res, next) => {
         })
 })
 
-router.post("/", (req, res) => {
-    res.send("POSTED")
+router.post("/", (req, res, next) => {
+    const agency_data = {
+        agencyNumber: req.body.data.agencyNumber,
+        parentAgencyNumber: req.body.data.parentAgencyNumber,
+        agencyOfficialName: req.body.data.agencyOfficialName,
+        agencyName: req.body.data.agencyName,
+        agencyType: req.body.data.agencyType,
+        agencyUrl: req.body.data.agencyUrl,
+        agencyPhone: req.body.data.agencyPhone,
+        agencyFareUrl: req.body.data.agencyFareUrl
+    }
+    axios
+        .post("/agencies", agency_data)
+        .then(result => {
+            res.json("done")
+        })
+        .catch(err => {
+            next({
+                code: 400,
+                subject: err.response.data
+            })
+        })
+})
+
+router.delete("/", (req, res, next) => {
+    axios
+        .delete("/agencies", {
+            params: {
+                id: req.query.id
+            }
+        })
+        .then(result => {
+            res.json("done")
+        })
+        .catch(err => {
+            next({
+                code: 400,
+                subject: err.response.data
+            })
+        })
 })
 
 router.get("/searchCorpNumAPI/:fetchby/:value/", (req, res, next) => {

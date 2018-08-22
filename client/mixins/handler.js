@@ -33,3 +33,21 @@ export const validate = {
         }
     }
 }
+
+export const confirm = {
+    methods: {
+        confirmHandler(inputMessage) {
+            return new Promise((resolve, reject) => {
+                this.$dialog.confirm({
+                    title: "削除",
+                    message: inputMessage,
+                    confirmText: "削除する",
+                    cancelText: "キャンセル",
+                    type: "is-danger",
+                    hasIcon: true,
+                    onConfirm: () => resolve()
+                })
+            })
+        }
+    }
+}
